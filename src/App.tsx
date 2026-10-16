@@ -8,10 +8,12 @@ import { SummaryCards } from './components/SummaryCards'
 import { createSampleItems } from './data/sampleItems'
 import { useTheme } from './hooks/useTheme'
 import { toISODate } from './lib/dates'
-import { CATEGORY_LABELS, type LifeItem } from './types'
+import { CATEGORY_LABELS, type LifeItem, type PageId } from './types'
+import { SectionPage } from './components/SectionPage'
 
 function App() {
   const { theme, setTheme } = useTheme()
+  const [currentPage, setCurrentPage] = useState<PageId>('dashboard')
 
   // Captured once per page load; fine until real data exists.
   const [now] = useState(() => new Date())
@@ -64,13 +66,21 @@ function App() {
         Skip to main content
       </a>
 
-      <Sidebar theme={theme} onThemeChange={setTheme} />
+      <Sidebar
+        theme={theme}
+        onThemeChange={setTheme}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
 
       <div className="app-main">
         <div className="app-content">
           <DashboardHeader now={now} query={query} onQueryChange={setQuery} />
 
-          <main id="main-content" className="dashboard">
+          
+      <main id="main-content" className="dashboard">
+        {currentPage === 'dashboard' ? (
+          <>
             <SummaryCards items={items} today={today} />
 
             <div className="dashboard-grid">
@@ -89,7 +99,12 @@ function App() {
               </div>
               <QuickAdd today={today} onAdd={handleAdd} />
             </div>
-          </main>
+          </>
+        ) : (
+          <SectionPage page={currentPage} />
+        )}
+      </main>
+
         </div>
       </div>
     </div>

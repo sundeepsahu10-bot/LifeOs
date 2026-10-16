@@ -2,28 +2,37 @@ import { useRef, useState, type KeyboardEvent } from 'react'
 import { Icon, type IconName } from './Icon'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import type { ThemeChoice } from '../hooks/useTheme'
+import type { PageId } from '../types'
 
 interface NavItem {
+  id: PageId
   label: string
   icon: IconName
-  current?: boolean
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', icon: 'dashboard', current: true },
-  { label: 'Reminders', icon: 'reminders' },
-  { label: 'Bills', icon: 'bills' },
-  { label: 'Subscriptions', icon: 'subscriptions' },
-  { label: 'Documents', icon: 'documents' },
-  { label: 'Calendar', icon: 'calendar' },
+  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { id: 'reminders', label: 'Reminders', icon: 'reminders' },
+  { id: 'bills', label: 'Bills', icon: 'bills' },
+  { id: 'subscriptions', label: 'Subscriptions', icon: 'subscriptions' },
+  { id: 'documents', label: 'Documents', icon: 'documents' },
+  { id: 'warranties', label: 'Warranties', icon: 'documents' },
+  { id: 'calendar', label: 'Calendar', icon: 'calendar' },
 ]
 
 interface SidebarProps {
   theme: ThemeChoice
   onThemeChange: (theme: ThemeChoice) => void
+  currentPage: PageId
+  onPageChange: (page: PageId) => void
 }
 
-export function Sidebar({ theme, onThemeChange }: SidebarProps) {
+export function Sidebar({
+  theme,
+  onThemeChange,
+  currentPage,
+  onPageChange,
+}: SidebarProps) {
   // Only used on small screens, where the sidebar becomes a top bar with a menu.
   const [open, setOpen] = useState(false)
   const toggleRef = useRef<HTMLButtonElement>(null)
@@ -61,27 +70,22 @@ export function Sidebar({ theme, onThemeChange }: SidebarProps) {
         <nav aria-label="Primary">
           <ul className="nav-list">
             {NAV_ITEMS.map((item) => (
-              <li key={item.label}>
-                {item.current ? (
-                  <a
+                <li key={item.id}>
+                <button
+                    type="button"
                     className="nav-item"
-                    href="#main-content"
-                    aria-current="page"
-                    onClick={() => setOpen(false)}
-                  >
+                    aria-current={currentPage === item.id ? 'page' : undefined}
+                    onClick={() => {
+                    onPageChange(item.id)
+                    setOpen(false)
+                    }}
+                >
                     <Icon name={item.icon} />
                     <span>{item.label}</span>
-                  </a>
-                ) : (
-                  <button type="button" className="nav-item" disabled>
-                    <Icon name={item.icon} />
-                    <span>{item.label}</span>
-                    <span className="nav-soon">Soon</span>
-                  </button>
-                )}
-              </li>
+                </button>
+                </li>
             ))}
-          </ul>
+            </ul>
         </nav>
 
         <div className="sidebar-footer">

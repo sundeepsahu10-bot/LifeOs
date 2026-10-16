@@ -37,3 +37,11 @@ export const CATEGORY_TONES: Record<ItemCategory, CategoryTone> = {
   document: 'neutral',
   event: 'success',
 }
+export type PageId =
+  | 'dashboard'
+  | 'reminders'
+  | 'bills'
+  | 'subscriptions'
+  | 'documents'
+  | 'warranties'
+  | 'calendar'
