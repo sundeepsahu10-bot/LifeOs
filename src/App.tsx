@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import './App.css'
 import { DashboardHeader } from './components/DashboardHeader'
 import { PrioritiesSection, UpcomingSection } from './components/ItemSections'
@@ -19,7 +20,10 @@ function App() {
   const [now] = useState(() => new Date())
   const today = toISODate(now)
 
-  const [items, setItems] = useState<LifeItem[]>(() => createSampleItems(now))
+  const [items, setItems] = useLocalStorage<LifeItem[]>(
+    'lifeos-items',
+    createSampleItems(now),
+  )
   const [query, setQuery] = useState('')
   const nextId = useRef(0)
 
