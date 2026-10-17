@@ -693,3 +693,16 @@ label.item-title {
     padding: 18px;
   }
 }
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}

@@ -1,3 +1,4 @@
+
 import { useRef, useState, type KeyboardEvent } from 'react'
 import { Icon, type IconName } from './Icon'
 import { ThemeSwitcher } from './ThemeSwitcher'
@@ -33,7 +34,7 @@ export function Sidebar({
   currentPage,
   onPageChange,
 }: SidebarProps) {
-  // Only used on small screens, where the sidebar becomes a top bar with a menu.
+  // Controls the navigation menu on small screens.
   const [open, setOpen] = useState(false)
   const toggleRef = useRef<HTMLButtonElement>(null)
 
@@ -51,8 +52,9 @@ export function Sidebar({
           <span className="brand-mark">
             <Icon name="logo" size={18} />
           </span>
-          <span>LifeOS</span>
+          <span>LifeSync</span>
         </div>
+
         <button
           ref={toggleRef}
           type="button"
@@ -70,27 +72,31 @@ export function Sidebar({
         <nav aria-label="Primary">
           <ul className="nav-list">
             {NAV_ITEMS.map((item) => (
-                <li key={item.id}>
+              <li key={item.id}>
                 <button
-                    type="button"
-                    className="nav-item"
-                    aria-current={currentPage === item.id ? 'page' : undefined}
-                    onClick={() => {
+                  type="button"
+                  className="nav-item"
+                  aria-current={
+                    currentPage === item.id ? 'page' : undefined
+                  }
+                  onClick={() => {
                     onPageChange(item.id)
                     setOpen(false)
-                    }}
+                  }}
                 >
-                    <Icon name={item.icon} />
-                    <span>{item.label}</span>
+                  <Icon name={item.icon} />
+                  <span>{item.label}</span>
                 </button>
-                </li>
+              </li>
             ))}
-            </ul>
+          </ul>
         </nav>
 
         <div className="sidebar-footer">
           <p className="text-overline">Appearance</p>
           <ThemeSwitcher theme={theme} onChange={onThemeChange} />
+
+          <p className="creator-credit">Made by Sundeep</p>
         </div>
       </div>
     </aside>

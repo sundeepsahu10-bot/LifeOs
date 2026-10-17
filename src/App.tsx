@@ -131,6 +131,7 @@ function App() {
               today={today}
               isFiltered={isFiltered}
               onToggle={handleToggle}
+              onAdd={handleAdd}
             />
 
             )}

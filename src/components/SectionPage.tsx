@@ -1,4 +1,5 @@
 
+import { QuickAdd } from './QuickAdd'
 import { formatDueLabel } from '../lib/dates'
 import {
   CATEGORY_LABELS,
@@ -14,6 +15,7 @@ interface SectionPageProps {
   today: string
   isFiltered: boolean
   onToggle: (id: string) => void
+  onAdd: (title: string, dueDate: string, category: ItemCategory) => void
 }
 
 const PAGE_CONTENT: Record<
@@ -71,6 +73,7 @@ export function SectionPage({
   today,
   isFiltered,
   onToggle,
+  onAdd,
 }: SectionPageProps) {
   if (page === 'dashboard') return null
 
@@ -90,59 +93,71 @@ export function SectionPage({
       <p>{content.description}</p>
 
       {category ? (
-        <section className="card panel" aria-label={`${content.title} items`}>
-          <div className="panel-head">
-            <h2>Your {content.title.toLowerCase()}</h2>
-            <p className="text-muted text-small">
-              {categoryItems.filter((item) => !item.done).length} remaining
-            </p>
-          </div>
+        <>
+          <QuickAdd
+            key={page}
+            today={today}
+            defaultCategory={category}
+            onAdd={onAdd}
+            />
 
-          {categoryItems.length === 0 ? (
-            <p className="empty">
-              {isFiltered
-                ? `No ${content.title.toLowerCase()} match your search.`
-                : `No ${content.title.toLowerCase()} yet. Use Quick add on the Dashboard to create one.`}
-            </p>
-          ) : (
-            <ul className="item-list">
-              {categoryItems.map((item) => {
-                const inputId = `section-item-${item.id}`
+          <section
+            className="card panel"
+            aria-label={`${content.title} items`}
+          >
+            <div className="panel-head">
+              <h2>Your {content.title.toLowerCase()}</h2>
+              <p className="text-muted text-small">
+                {categoryItems.filter((item) => !item.done).length} remaining
+              </p>
+            </div>
 
-                return (
-                  <li
-                    className="item"
-                    key={item.id}
-                    data-done={item.done}
-                  >
-                    <input
-                      id={inputId}
-                      className="item-check"
-                      type="checkbox"
-                      checked={item.done}
-                      onChange={() => onToggle(item.id)}
-                    />
+            {categoryItems.length === 0 ? (
+              <p className="empty">
+                {isFiltered
+                  ? `No ${content.title.toLowerCase()} match your search.`
+                  : `No ${content.title.toLowerCase()} yet. Use Quick add above to create one.`}
+              </p>
+            ) : (
+              <ul className="item-list">
+                {categoryItems.map((item) => {
+                  const inputId = `section-item-${item.id}`
 
-                    <div className="item-body">
-                      <label htmlFor={inputId} className="item-title">
-                        {item.title}
-                      </label>
+                  return (
+                    <li
+                      className="item"
+                      key={item.id}
+                      data-done={item.done}
+                    >
+                      <input
+                        id={inputId}
+                        className="item-check"
+                        type="checkbox"
+                        checked={item.done}
+                        onChange={() => onToggle(item.id)}
+                      />
 
-                      <span className="item-meta">
-                        <time dateTime={item.dueDate}>
-                          {formatDueLabel(item.dueDate, today)}
-                        </time>
-                        {item.detail ? ` · ${item.detail}` : ''}
-                      </span>
-                    </div>
+                      <div className="item-body">
+                        <label htmlFor={inputId} className="item-title">
+                          {item.title}
+                        </label>
 
-                    <CategoryBadge category={item.category} />
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </section>
+                        <span className="item-meta">
+                          <time dateTime={item.dueDate}>
+                            {formatDueLabel(item.dueDate, today)}
+                          </time>
+                          {item.detail ? ` · ${item.detail}` : ''}
+                        </span>
+                      </div>
+
+                      <CategoryBadge category={item.category} />
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </section>
+        </>
       ) : (
         <div className="card section-placeholder">
           <h2>Coming next</h2>
